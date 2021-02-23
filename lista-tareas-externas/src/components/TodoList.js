@@ -5,7 +5,7 @@ const TodoList = ( {users}) => {
 
     const [deleteTask, setDeleteTask] = useState(false);
     const [todoList, setTodoList] = useState([]);
-    const [completed, setCompleted] = useState(true);
+    const [complete ] = useState(false);
 
     useEffect( () => {
 
@@ -34,18 +34,26 @@ const TodoList = ( {users}) => {
     }
 
     const handleDeleteTask = (index) =>{
-       
+       setTodoList((prevState) => {
+           return prevState.filter((todoList,i) => i !== index);
+       })
     }
 
     const completeTask = (index) => {
-       
+       todoList.map((todo,i) => {
+            if(index === i){
+                if(!(todo.completed || complete)){
+                    todo.completed = true;
+                }
+            }
+       })
     }
     return(
         <div>
             <label>Tarea</label>
             <input id="tarea" placeholder="Ingrese una tarea"></input>
             <button onClick={handleAddTask}>Agregar tarea</button>
-            <h1>Lista de tareas</h1>
+            <h1>Lista de tareas ({todoList.length}) tareas en total</h1>
             <table>
                 <thead>
                     <tr>
@@ -62,8 +70,8 @@ const TodoList = ( {users}) => {
                                 
                             <tr key= {todo.id}>
                             <td>{todo.title}</td>
-                            <td>{todo.completed ? (<p>Completada</p>): (<button onClick={completeTask}>{completed ? "Completada" : "Marcar como completada"}</button>)}</td>
-                            <td><button onClick={handleDeleteTask} >Eliminar</button></td>
+                            <td>{ (<button onClick={() => completeTask(todo.id)}>{complete ? "Completada" : "Marcar como completada"}</button>)}</td>
+                            <td><button onClick={() => handleDeleteTask(todo.id)} >Eliminar</button></td>
                             </tr>
                             );
                         })
